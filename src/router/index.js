@@ -4,15 +4,16 @@ import BusinessManage from "../views/BusinessManage.vue";
 import BusinessOrders from "../components/business/BusinessOrders.vue";
 import BusinessOrderDetail from "../components/business/BusinessOrderDetail.vue";
 import ItemList from "../components/business/ItemList.vue";
+import CustomerManage from "../views/CustomerManage.vue";
+import BusinessList from "../components/customer/BusinessList.vue";
+import CustomerOrders from "../components/customer/CustomerOrders.vue";
+import BusinessInfo from "../components/customer/BusinessInfo.vue";
+import CustomerOrderDetail from "../components/customer/CustomerOrderDetail.vue";
 
 const routes = [
     {
         path: "/",
         redirect:"/business"
-    },
-    {
-        path: "/customer",
-        redirect: "/customer/shopList"
     },
     {
         path:'/login',
@@ -41,7 +42,44 @@ const routes = [
                 component: BusinessOrderDetail
             }
         ]
-    }
+    },
+    {
+        path: "/customer",
+        name: "顾客界面",
+        component: CustomerManage,
+        children:[
+            {
+                path: "businessList",
+                name: "店铺列表",
+                component: BusinessList
+            },
+            {
+                path: "customerOrders",
+                name: "我的订单",
+                component: CustomerOrders
+            },
+            {
+                path: "businessInfo",
+                name: "商户信息",
+                component: BusinessInfo
+            },
+            {
+                path: "orderDetail",
+                name:"订单明细",
+                component: CustomerOrderDetail
+            }
+            // {
+            //     path: "itemInfo",
+            //     name: "商品信息",
+            //     component: ItemInfo
+            // },
+            // {
+            //     path: "confirm",
+            //     name:"确认订单",
+            //     component: Confirm
+            // }
+        ]
+    },
 ]
 
 
@@ -50,44 +88,44 @@ const router = createRouter({
     routes,
 })
 
-// router.beforeEach((to, from, next) => {
-//
-//
-//     /***************检测是否有token，若无则返回登录页*****************/
-//     const user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user"))[0] : null
-//     const isLogin = !!user
-//     // //放行登录页和注册页
-//     // if (to.path === '/login' ) {
-//     //     next()
-//     // }else  {
-//     //     isLogin ? next() : next('/login')
-//     // }
-//     // Allow access to login page and registration page
-//     if (to.path === '/login') {
-//         next();
-//     } else {
-//         // If user is not logged in, redirect to login page
-//         if (!isLogin) {
-//             next('/login');
-//         } else {
-//             // Check user type and route accordingly
-//             const userType = user.userType;
-//             console.log(userType)
-//             if (to.path.startsWith('/customer') && userType === 0) {
-//                 // User is a customer, allow access to customer routes
-//                 next();
-//             } else if (to.path.startsWith('/business') && userType === 1) {
-//                 // User is a merchant, allow access to merchant routes
-//                 next();
-//             } else {
-//                 // User is trying to access the opposite type of route, redirect to appropriate page
-//                 if (userType === 0) {
-//                     next('/business/businessList');
-//                 } else if (userType === 1) {
-//                     next('/customer/shopList');
-//                 }
-//             }
-//         }
-//     }
-// })
+router.beforeEach((to, from, next) => {
+
+
+    /***************检测是否有token，若无则返回登录页*****************/
+    const user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : null
+    const isLogin = !!user
+    // //放行登录页和注册页
+    // if (to.path === '/login' ) {
+    //     next()
+    // }else  {
+    //     isLogin ? next() : next('/login')
+    // }
+    // Allow access to login page and registration page
+    if (to.path === '/login') {
+        next();
+    } else {
+        // If user is not logged in, redirect to login page
+        if (!isLogin) {
+            next('/login');
+        } else {
+            // Check user type and route accordingly
+            const userType = user.userType;
+            console.log(userType)
+            if (to.path.startsWith('/customer') && userType === 0) {
+                // User is a customer, allow access to customer routes
+                next();
+            } else if (to.path.startsWith('/business') && userType === 1) {
+                // User is a merchant, allow access to merchant routes
+                next();
+            } else {
+                // User is trying to access the opposite type of route, redirect to appropriate page
+                if (userType === 0) {
+                    next('/business/businessList');
+                } else if (userType === 1) {
+                    next('/customer/shopList');
+                }
+            }
+        }
+    }
+})
 export default router

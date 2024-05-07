@@ -1,0 +1,191 @@
+<script setup>
+import {useRouter} from "vue-router";
+import {computed, onMounted, ref} from "vue";
+import axios from "axios";
+import qs from "qs";
+
+let user;
+const router=useRouter()
+
+let localShopName=ref("")
+let localShopId=ref(-1);
+
+const shopItemList=ref([]);
+const lineItemList=ref([]);
+let orderId=ref();
+
+
+let currentPage=ref(1);
+let total=ref(0);
+let pageSize=ref(9)
+
+const pagedShopItemList = computed(() => {
+  // console.log(shopList.value)
+  const startIndex = (currentPage.value - 1) * pageSize.value;
+  const endIndex = startIndex + pageSize.value;
+  let list=shopItemList.value.slice(startIndex, endIndex);
+  // console.log(list)
+  return list
+});
+
+onMounted(()=>{
+  user=JSON.parse(sessionStorage.getItem("user"))
+  localShopId.value=router.currentRoute.value.query.shopId
+  localShopName.value=router.currentRoute.value.query.shopName
+  console.log(localShopId.value)
+  getShopItemList();
+
+  getOrder();
+
+
+})
+
+async function getOrder(){
+  const requestData={
+    customerId:user.userId,
+    businessId:localShopId.value
+  }
+
+  const response = await axios.post("/customer/getOrder", qs.stringify(requestData), {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  console.log(response.data)
+  orderId.value=response.data.orderId
+  lineItemList.value=response.data.res
+
+  shopItemList.value.forEach((shopItem) => {
+    // 检查每个shopItem是否存在于lineItemList中
+    const foundItem = lineItemList.value.find((lineItem) => lineItem.itemId === shopItem.itemId);
+
+    if (foundItem) {
+      // 找到匹配项，将quantity赋值给shopItem
+      shopItem.quantity = foundItem.quantity;
+    } else {
+      // 没有找到匹配项，将quantity设为0
+      shopItem.quantity = 0;
+    }
+  });
+  console.log(shopItemList.value)
+}
+
+async function getShopItemList() {
+  const response = await axios.get("/customer/getItems", {params: {userId: localShopId.value}})
+  console.log(response);
+  shopItemList.value=response.data
+  total.value=response.data.length
+}
+
+async function handleChange(shopItem) {
+  const requestData={
+    orderId:orderId.value,
+    itemId:shopItem.itemId,
+    quantity:shopItem.quantity
+  }
+  // console.log(val)
+  const response = await axios.post("/customer/changeQuantity", qs.stringify(requestData), {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  })
+  console.log(response)
+}
+
+function handleCurrentChange(newPage){
+  // console.log(newPage)
+  currentPage.value=newPage
+}
+</script>
+
+<template>
+  <div style="display:flex; background-color: #c0c0c0">
+    <el-card class="box-card">
+      <div>{{localShopName}}</div>
+    </el-card>
+  </div>
+  <el-row>
+    <el-col v-for="shopItem in pagedShopItemList" :key="shopItem.itemId" :span="8"
+    >
+      <div  class="text item">
+        <el-card :body-style="{ padding: '10px',display:'flex'}" class="card" >
+
+          <img
+              src="../../assets/img/img_1.png"
+              class="image"
+          />
+          <div style="padding: 14px">
+            <div>{{ shopItem.itemName }}</div>
+            <div>{{shopItem.description}}</div>
+            <div>&#165;{{shopItem.price}}</div>
+            <el-input-number v-model="shopItem.quantity" :min="0" :max="9" @change="handleChange(shopItem)" />
+<!--            <div class="bottom">-->
+
+<!--              <el-button text class="button">Operating</el-button>-->
+<!--            </div>-->
+          </div>
+        </el-card>
+
+      </div>
+    </el-col>
+  </el-row>
+  <div class="example-pagination-block">
+
+    <el-pagination
+        v-model:current-page="currentPage"
+        :page-size="pageSize"
+        layout="total, prev, pager, next"
+        :total="total"
+
+        @current-change="handleCurrentChange"
+    />
+<!--    <el-button type="success" style="float: right; ">支付</el-button>-->
+  </div>
+
+</template>
+
+<style scoped>
+.text {
+  font-size: 14px;
+
+}
+
+.item {
+  padding: 10px 0;
+}
+
+.box-card {
+  width: 480px;
+  margin: 5px auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.card{
+  width: 100%;
+}
+.card .image{
+  width: 100px;
+  height: 100px;
+}
+
+
+.text {
+  font-size: 14px;
+}
+
+.item {
+  margin-bottom: 5px;
+  margin-right: 5px;
+}
+
+
+
+.example-pagination-block{
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+</style>
