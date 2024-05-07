@@ -14,7 +14,8 @@ let form=ref({});
 
 let currentPage=ref(1);
 let total=ref(0);
-let pageSize=ref(10);
+let pageSize=ref(5);
+let loading=ref(true)
 
 const pagedItemList = computed(() => {
   // console.log(itemList.value)
@@ -28,7 +29,7 @@ const pagedItemList = computed(() => {
 
 onMounted( () => {
   user=JSON.parse(sessionStorage.getItem("user"))
-
+  // console.log(user)
   // console.log(router.currentRoute.value.query.shopId)
   getItemList();
   // console.log(pagedShopList.value);
@@ -50,12 +51,14 @@ const error = () => {
 
 async function getItemList() {
 
-  let businessId=user.id
-
-  const response = await axios.get("/business/getItemList", {params: {businessId}});
+  let userId=user.userId
+  console.log(userId)
+  const response = await axios.get("/business/getItems", {params: {userId}});
+  loading.value=false
   console.log(response)
   itemList.value=response.data
   total.value=response.data.length;
+
 }
 
 function add(){
@@ -65,7 +68,7 @@ function add(){
 
 async function save() {
 
-  form.value.businessId = user.id
+  form.value.userId = user.userId
   console.log(form.value)
   const response = await axios.post("/business/createItem", qs.stringify(form.value), {
     headers: {
@@ -77,26 +80,30 @@ async function save() {
   getItemList()
 }
 
-async function deleteItem(itemId) {
-  const requestData = {
-    params: {
-      id: itemId,
-    },
-  };
-  // console.log(requestData)
-  await axios.get("/item/delete",requestData).then(res=>{
-    ok();
-  }).catch(err=>{
-    error()
-    console.log(err);
-  })
 
-  getItemList()
-}
 
 function handleCurrentChange(newPage){
   // console.log(newPage)
   currentPage.value=newPage
+}
+
+async function changeStatus(row) {
+  let userId = user.userId;
+  let itemId = row.itemId
+  let status = row.status
+
+  const formData = {
+    userId: userId,
+    itemId: itemId,
+    status: status
+  }
+  const response = await axios.post('/business/changeStatus', formData,{
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  });
+  console.log(response.data); // 这里可以根据需要处理响应
+
 }
 </script>
 
@@ -106,15 +113,26 @@ function handleCurrentChange(newPage){
 
 
   </div>
-  <el-table :data="pagedItemList" border stripe >
+  <el-table :data="pagedItemList" border stripe v-loading="loading">
 
-    <el-table-column prop="id" label="ID" >
+    <el-table-column prop="itemId" label="ID" >
     </el-table-column>
     <el-table-column prop="itemName" label="商品名称" >
     </el-table-column>
     <el-table-column prop="description" label="商品名称" >
     </el-table-column>
     <el-table-column prop="price" label="价格">
+    </el-table-column>
+    <el-table-column prop="status" label="是否上架">
+      <template #default="{ row }">
+        <el-switch v-model="row.status"
+                   :active-value="1"
+                   :inactive-value="0"
+                   active-color="#13ce66"
+                   inactive-color="#ff4949"
+                   @change="changeStatus(row)"
+        ></el-switch>
+      </template>
     </el-table-column>
 
 

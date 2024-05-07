@@ -2,7 +2,7 @@
 import { ArrowDown } from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
 import {computed, onMounted, ref} from "vue";
-let user=JSON.parse(sessionStorage.getItem('user'))[0]
+let user=JSON.parse(sessionStorage.getItem('user'))
 const router=useRouter();
 // const routeName = ref(router.currentRoute.value.name);
 const routeName = computed(()=>{return router.currentRoute.value.name})

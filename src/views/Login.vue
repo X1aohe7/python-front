@@ -61,7 +61,7 @@ const doLogin = async () => {
       if(user.userType==1){
         router.push("/business");
       }else {
-        router.push("/manage")
+        router.push("/customer")
       }
 
 
