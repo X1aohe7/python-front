@@ -50,7 +50,7 @@ const error = () => {
 }
 
 async function getItemList() {
-
+  loading.value=true
   let userId=user.userId
   console.log(userId)
   const response = await axios.get("/business/getItems", {params: {userId}});
@@ -105,6 +105,24 @@ async function changeStatus(row) {
   console.log(response.data); // 这里可以根据需要处理响应
 
 }
+
+async function deleteItem(id) {
+  let userId = user.userId;
+  let itemId = id
+
+
+  const formData = {
+    userId: userId,
+    itemId: itemId,
+  }
+  const response = await axios.post('/business/deleteItem', formData, {
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded'
+    }
+  });
+  console.log(response.data); // 这里可以根据需要处理响应
+  getItemList()
+}
 </script>
 
 <template>
@@ -137,7 +155,7 @@ async function changeStatus(row) {
 
 
     <el-table-column label="操作" >
-      <template #default="scope">
+      <template #default="{ row }">
 <!--        <el-button type="success"><el-icon style="margin-right: 3px"><View /></el-icon> 查看</el-button>-->
         <el-popconfirm
             width="220"
@@ -146,7 +164,7 @@ async function changeStatus(row) {
             :icon="InfoFilled"
             icon-color="#626AEF"
             title="确认删除吗?"
-            @confirm="deleteItem(scope.row.id)"
+            @confirm="deleteItem(row.itemId)"
         >
           <template #reference>
             <el-button type="danger" ><el-icon style="margin-right: 3px"><Delete /></el-icon> 删除</el-button>
