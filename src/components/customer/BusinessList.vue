@@ -3,6 +3,7 @@
 import {useRouter} from "vue-router";
 import {computed, onMounted, ref} from "vue";
 import axios from "axios";
+import {ElLoading} from "element-plus";
 const shopList=ref([]);
 const router=useRouter();
 let currentPage=ref(1);
@@ -23,10 +24,17 @@ onMounted(()=>{
 })
 
 async function getAllShop() {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+
   const response = await axios.get("/customer/getAllShop")
   console.log(response)
   shopList.value = response.data;
   total.value=response.data.length
+  loading.close()
 }
 
 function handleCurrentChange(newPage){

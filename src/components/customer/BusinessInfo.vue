@@ -3,6 +3,7 @@ import {useRouter} from "vue-router";
 import {computed, onMounted, ref} from "vue";
 import axios from "axios";
 import qs from "qs";
+import {ElLoading} from "element-plus";
 
 let user;
 const router=useRouter()
@@ -27,8 +28,14 @@ const pagedShopItemList = computed(() => {
   // console.log(list)
   return list
 });
+const loading = ElLoading.service({
+  lock: true,
+  text: 'Loading',
+  background: 'rgba(0, 0, 0, 0.7)',
+})
 
 onMounted(()=>{
+
   user=JSON.parse(sessionStorage.getItem("user"))
   localShopId.value=router.currentRoute.value.query.shopId
   localShopName.value=router.currentRoute.value.query.shopName
@@ -68,6 +75,7 @@ async function getOrder(){
     }
   });
   console.log(shopItemList.value)
+  loading.close()
 }
 
 async function getShopItemList() {
@@ -81,7 +89,8 @@ async function handleChange(shopItem) {
   const requestData={
     orderId:orderId.value,
     itemId:shopItem.itemId,
-    quantity:shopItem.quantity
+    quantity:shopItem.quantity,
+    price:shopItem.price
   }
   // console.log(val)
   const response = await axios.post("/customer/changeQuantity", qs.stringify(requestData), {

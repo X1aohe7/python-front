@@ -18,7 +18,7 @@ function exit(){
     <span class="text">{{ routeName }}</span>
     <el-dropdown class="el-drop" >
       <span class="el-dropdown-link">
-        {{ user.username }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
+        {{ user.customerName }}<el-icon class="el-icon--right"><arrow-down /></el-icon>
       </span>
       <template #dropdown>
         <el-dropdown-menu>

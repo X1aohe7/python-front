@@ -10,7 +10,7 @@ const orderList=ref([]);
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
-
+let loading=ref(true)
 const pagedOrderList = computed(() => {
   // console.log(shopList.value)
   const startIndex = (currentPage.value - 1) * pageSize.value;
@@ -26,11 +26,12 @@ onMounted(()=>{
 })
 
 async function getAllOrder() {
-  const customerId=user.id;
-  const response = await axios.get("/customer/getAllOrder", {params: {customerId}})
+  const customerId=user.userId;
+  const response = await axios.get("/customer/getOrderList", {params: {customerId}})
   console.log(response)
   orderList.value=response.data
   total.value=response.data.length
+  loading.value=false
 }
 
 function mapStatus(status){
@@ -58,11 +59,11 @@ function handleClick(row){
 </script>
 
 <template>
-  <el-table :data="pagedOrderList" border stripe >
+  <el-table :data="pagedOrderList" border stripe v-loading="loading">
 
-    <el-table-column prop="id" label="订单号" width="80">
+    <el-table-column prop="orderId" label="订单号" width="80">
     </el-table-column>
-    <el-table-column prop="shop.shopName" label="商户名称" >
+    <el-table-column prop="shopName" label="商户名称" >
     </el-table-column>
     <el-table-column prop="totalPrice" label="总价" >
     </el-table-column>
