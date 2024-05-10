@@ -45,6 +45,8 @@ const error = () => {
 onMounted(()=>{
   user = JSON.parse(sessionStorage.getItem("user"));
   localOrderId.value=router.currentRoute.value.query.orderId
+  localShopName.value=router.currentRoute.value.query.shopName
+  // console.log(localOrderId.value)
   getLineItemList()
 })
 
@@ -55,11 +57,9 @@ async function getLineItemList() {
 
   const response = await axios.get("/customer/getOrderDetail", {params:{orderId:localOrderId.value}})
   console.log(response)
-  order.value=response.data
-  // console.log(order.value)
-  localShopName.value=order.value.shop.shopName
-  lineItemList.value=response.data.lineItemList
-  total.value=response.data.lineItemList.length
+  order.value=response.data.order[0]
+  lineItemList.value=response.data.orderDetail
+  total.value=response.data.orderDetail.length
   customerStatus.value=order.value.customerStatus
 }
 
@@ -116,7 +116,7 @@ async function pay() {
   <el-card>{{localShopName}}</el-card>
   <el-table :data="pagedLineItemList" border stripe >
 
-    <el-table-column prop="id" label="商品流水id" width="120">
+    <el-table-column prop="itemId" label="商品id" width="120">
     </el-table-column>
     <el-table-column prop="itemName" label="商品名" >
     </el-table-column>

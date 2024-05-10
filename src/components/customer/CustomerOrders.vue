@@ -52,8 +52,8 @@ function handleCurrentChange(newPage){
 function handleClick(row){
   // console.log(row)
   router.push({
-    path:"/index/orderDetail",
-    query:{orderId:row.id}
+    path:"/customer/orderDetail",
+    query:{orderId:row.orderId,shopName:row.shopName}
   })
 }
 </script>
