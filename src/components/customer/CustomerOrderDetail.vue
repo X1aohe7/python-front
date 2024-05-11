@@ -4,7 +4,7 @@ import axios from "axios";
 import {View} from "@element-plus/icons-vue";
 import qs from "qs";
 import {useRouter} from "vue-router";
-import {ElMessage} from "element-plus";
+import {ElLoading, ElMessage} from "element-plus";
 
 const router=useRouter()
 
@@ -14,7 +14,11 @@ const localOrderId=ref()
 const localShopName=ref("")
 const order=ref({})
 const customerStatus=ref()
-
+const loading = ElLoading.service({
+  lock: true,
+  text: 'Loading',
+  background: 'rgba(0, 0, 0, 0.7)',
+})
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
@@ -48,19 +52,26 @@ onMounted(()=>{
   localShopName.value=router.currentRoute.value.query.shopName
   // console.log(localOrderId.value)
   getLineItemList()
+  loading.close()
 })
 
-async function getLineItemList() {
+function getLineItemList() {
   const requestData={
     orderId:localOrderId.value
   }
 
-  const response = await axios.get("/customer/getOrderDetail", {params:{orderId:localOrderId.value}})
-  console.log(response)
-  order.value=response.data.order[0]
-  lineItemList.value=response.data.orderDetail
-  total.value=response.data.orderDetail.length
-  customerStatus.value=order.value.customerStatus
+  axios.get("/customer/getOrderDetail", {params:{orderId:localOrderId.value}})
+  .then((response)=>{
+    console.log(response)
+    order.value=response.data.order[0]
+    lineItemList.value=response.data.orderDetail
+    total.value=response.data.orderDetail.length
+    customerStatus.value=order.value.customerStatus
+    loading.close()
+
+
+  })
+
 }
 
 
@@ -72,17 +83,17 @@ function handleCurrentChange(newPage){
 
 async function cancel() {
   const requestData={
-    orderId:order.value.id
+    orderId:order.value.orderId
   }
 
-  await axios.post("/customer/cancelOrder", qs.stringify(requestData), {
+  await axios.post("/customer/cancel", qs.stringify(requestData), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   }).then(res=>{
     console.log(res)
     ok();
-    router.push("/index/customerOrders")
+    router.push("/customer/customerOrders")
   }).catch(err=>{
     error()
     console.log(err)
@@ -93,18 +104,18 @@ async function cancel() {
 async function pay() {
 
   const requestData={
-    orderId:order.value.id
+    orderId:order.value.orderId
   }
 
 
-  await axios.post("/customer/payOrder", qs.stringify(requestData), {
+  await axios.post("/customer/pay", qs.stringify(requestData), {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
   }).then(res=>{
     console.log(res)
     ok();
-    router.push("/index/customerOrders")
+    router.push("/customer/customerOrders")
   }).catch(err=>{
     error()
     console.log(err)

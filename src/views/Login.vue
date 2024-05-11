@@ -53,7 +53,7 @@ const doLogin = async () => {
     });
 
     // 打印收到的数据（用于测试）
-    console.log(res.data[0]);
+    console.log(res.data);
     if(res.data!=null){
       const user=res.data[0]
       ok();
