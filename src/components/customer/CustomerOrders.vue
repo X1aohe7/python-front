@@ -41,6 +41,26 @@ function mapStatus(status){
       return "已支付"
   }else if (status==2){
     return "已退款"
+  }else if(status==3){
+    return "已取消"
+  }
+}
+function businessStatus(status){
+  // if(status==0){
+  //   return "未支付"
+  // }else if (status==1){
+  //   return "已支付"
+  // }else if (status==2){
+  //   return "已退款"
+  // }else if(status==3){
+  //   return "已取消"
+  // }
+  if(status==0){
+    return "未确认"
+  }else if (status==1){
+    return "已确认"
+  }else if (status==2){
+    return "已退款"
   }
 }
 
@@ -70,6 +90,11 @@ function handleClick(row){
     <el-table-column prop="customerStatus" label="订单状态">
       <template v-slot="scope">
         {{ mapStatus(scope.row.customerStatus) }}
+      </template>
+    </el-table-column>
+    <el-table-column prop="businessStatus" label="商家状态">
+      <template v-slot="scope">
+        {{ businessStatus(scope.row.businessStatus) }}
       </template>
     </el-table-column>
     <el-table-column label="操作">

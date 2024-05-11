@@ -26,8 +26,8 @@ onMounted(()=>{
 })
 
 async function getAllOrder() {
-  const businessId=user.id;
-  const response = await axios.get("/business/getAllOrder", {params: {businessId}})
+  const businessId=user.userId;
+  const response = await axios.get("/business/getOrderList", {params: {businessId}})
   console.log(response)
   orderList.value=response.data
   total.value=response.data.length
@@ -50,8 +50,8 @@ function handleCurrentChange(newPage){
 function handleClick(row){
   // console.log(row)
   router.push({
-    path:"/manage/orderDetail",
-    query:{orderId:row.id}
+    path:"/business/orderDetail",
+    query:{orderId:row.orderId}
   })
 }
 
@@ -61,13 +61,11 @@ function handleClick(row){
 
   <el-table :data="pagedOrderList" border stripe >
 
-    <el-table-column prop="id" label="订单号" width="80">
+    <el-table-column prop="orderId" label="订单号" width="80">
     </el-table-column>
-    <el-table-column prop="customer.id" label="用户id" width="80">
+    <el-table-column prop="customerId" label="用户id" width="80">
     </el-table-column>
-    <el-table-column prop="customer.customerName" label="用户名称" >
-    </el-table-column>
-    <el-table-column prop="shop.shopName" label="商户名称">
+    <el-table-column prop="customerName" label="用户名称" >
     </el-table-column>
     <el-table-column prop="totalPrice" label="总价">
     </el-table-column>

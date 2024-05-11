@@ -53,12 +53,12 @@ async function getLineItemList() {
   }
 
   const response = await axios.get("/business/getOrderDetail", {params:{orderId:localOrderId.value}})
-  // console.log(response)
-  order.value=response.data
+  console.log(response)
+  order.value=response.data.order[0]
   // console.log(order.value)
-  localShopName.value=order.value.shop.shopName
-  lineItemList.value=response.data.lineItemList
-  total.value=response.data.lineItemList.length
+  // localShopName.value=order.value.shop.shopName
+  lineItemList.value=response.data.orderDetail
+  total.value=response.data.orderDetail.length
   businessStatus.value=order.value.businessStatus
 }
 
@@ -71,7 +71,7 @@ function handleCurrentChange(newPage){
 
 async function refund() {
   const requestData={
-    orderId:order.value.id
+    orderId:order.value.orderId
   }
 
   await axios.post("/business/refund", qs.stringify(requestData), {
@@ -81,7 +81,7 @@ async function refund() {
   }).then(res=>{
     console.log(res)
     ok();
-    router.push("/manage/businessOrders")
+    router.push("/business/businessOrders")
   }).catch(err=>{
     error()
     console.log(err)
@@ -92,7 +92,7 @@ async function refund() {
 async function confirm() {
 
   const requestData={
-    orderId:order.value.id
+    orderId:order.value.orderId
   }
 
 
@@ -103,7 +103,7 @@ async function confirm() {
   }).then(res=>{
     console.log(res)
     ok();
-    router.push("/manage/businessOrders")
+    router.push("/business/businessOrders")
   }).catch(err=>{
     error()
     console.log(err)
@@ -112,10 +112,10 @@ async function confirm() {
 </script>
 
 <template>
-  <el-card>{{localShopName}}</el-card>
+<!--  <el-card>{{localShopName}}</el-card>-->
   <el-table :data="pagedLineItemList" border stripe >
 
-    <el-table-column prop="item.id" label="商品id" width="80">
+    <el-table-column prop="itemId" label="商品id" width="80">
     </el-table-column>
     <el-table-column prop="itemName" label="商品名" >
     </el-table-column>
