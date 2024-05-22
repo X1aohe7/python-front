@@ -9,6 +9,7 @@ const router=useRouter();
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
+let key=ref("")
 const pagedShopList = computed(() => {
   // console.log(shopList.value)
   const startIndex = (currentPage.value - 1) * pageSize.value;
@@ -48,10 +49,30 @@ function gotoBusinessInfo(shop){
     query: { shopId: shop.userId, shopName:shop.shopName }
   });
 }
+
+function search(){
+  axios.get("/customer/searchBusiness",{params: {key: key.value}}).then(res=>{
+    console.log(res)
+    shopList.value = res.data;
+  })
+
+
+}
+function clean(){
+  getAllShop()
+}
 </script>
 
 <template>
-<el-row style="margin-top: 5px">
+  <div>
+    <el-input style="width: 400px;margin: 10px 5px" placeholder="请输入名称" suffix-icon="el-icon-search" v-model="key"></el-input>
+    <el-button type="primary" style="margin-left: 5px;" @click="search">搜索 <i
+        class="el-icon-search"></i></el-button>
+    <el-button type="primary" style="margin-left: 5px;" @click="clean">清除 <i class="el-icon-refresh"></i>
+    </el-button>
+  </div>
+
+  <el-row style="margin-top: 5px">
   <el-col v-for="shop in pagedShopList" :key="shop.userId" :span="8"
           >
     <div  class="text item">

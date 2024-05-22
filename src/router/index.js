@@ -7,8 +7,11 @@ import ItemList from "../components/business/ItemList.vue";
 import CustomerManage from "../views/CustomerManage.vue";
 import BusinessList from "../components/customer/BusinessList.vue";
 import CustomerOrders from "../components/customer/CustomerOrders.vue";
-import BusinessInfo from "../components/customer/BusinessInfo.vue";
+import BusinessInfo from "../components/business/BusinessInfo.vue";
 import CustomerOrderDetail from "../components/customer/CustomerOrderDetail.vue";
+import CustomerInfo from "../components/customer/CustomerInfo.vue";
+import CustomerEditPassword from "../components/customer/CustomerEditPassword.vue";
+import BusinessEditPassword from "../components/business/BusinessEditPassword.vue";
 
 const routes = [
     {
@@ -40,6 +43,16 @@ const routes = [
                 path: "orderDetail",
                 name: "订单信息",
                 component: BusinessOrderDetail
+            },
+            {
+                path: "businessInfo",
+                name:"商家信息",
+                component: BusinessInfo
+            },
+            {
+                path: "editPassword",
+                name:"修改商家密码",
+                component: BusinessEditPassword
             }
         ]
     },
@@ -67,6 +80,16 @@ const routes = [
                 path: "orderDetail",
                 name:"订单明细",
                 component: CustomerOrderDetail
+            },
+            {
+                path: "customerInfo",
+                name:"顾客信息",
+                component: CustomerInfo
+            },
+            {
+                path: "editPassword",
+                name:"修改密码",
+                component: CustomerEditPassword
             }
             // {
             //     path: "itemInfo",

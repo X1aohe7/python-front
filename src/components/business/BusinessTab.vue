@@ -3,7 +3,7 @@ import {
   Document,
   Menu as IconMenu,
   Location,
-  Setting, List,
+  Setting, List, Avatar,
 } from '@element-plus/icons-vue'
 import {useRouter} from "vue-router";
 const handleOpen = (key, keyPath) => {
@@ -53,7 +53,22 @@ const path=router.currentRoute.value.path
           <el-icon><document /></el-icon>
           <span>订单列表</span>
         </el-menu-item>
-
+        <el-sub-menu index="1">
+          <template #title>
+            <el-icon><Avatar /></el-icon>
+            <span slot="title">账户管理</span>
+          </template>
+          <!--我创建的-->
+          <el-menu-item index="/business/businessInfo">
+            <i class="el-icon-view"></i>
+            <span slot="title">个人信息</span>
+          </el-menu-item>
+          <!--我参与的-->
+          <el-menu-item index="/business/editPassword">
+            <i class="el-icon-edit"></i>
+            <span slot="title">修改密码</span>
+          </el-menu-item>
+        </el-sub-menu>
 
 
       </el-menu>

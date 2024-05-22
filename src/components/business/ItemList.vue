@@ -137,7 +137,7 @@ async function deleteItem(id) {
     </el-table-column>
     <el-table-column prop="itemName" label="商品名称" >
     </el-table-column>
-    <el-table-column prop="description" label="商品名称" >
+    <el-table-column prop="description" label="商品描述" >
     </el-table-column>
     <el-table-column prop="price" label="价格">
     </el-table-column>
