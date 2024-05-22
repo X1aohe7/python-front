@@ -59,12 +59,12 @@ const path=router.currentRoute.value.path
             <span slot="title">账户管理</span>
           </template>
           <!--我创建的-->
-          <el-menu-item index="/business/businessInfo">
+          <el-menu-item index="/business/editBusinessInfo">
             <i class="el-icon-view"></i>
             <span slot="title">个人信息</span>
           </el-menu-item>
           <!--我参与的-->
-          <el-menu-item index="/business/editPassword">
+          <el-menu-item index="/business/businessEditPassword">
             <i class="el-icon-edit"></i>
             <span slot="title">修改密码</span>
           </el-menu-item>
