@@ -13,6 +13,7 @@ import CustomerInfo from "../components/customer/CustomerInfo.vue";
 import CustomerEditPassword from "../components/customer/CustomerEditPassword.vue";
 import BusinessEditPassword from "../components/business/BusinessEditPassword.vue";
 import EditBusinessInfo from "../components/business/EditBusinessInfo.vue";
+import AiTalk from "../components/AiTalk.vue";
 
 const routes = [
     {
@@ -54,6 +55,11 @@ const routes = [
                 path: "businessEditPassword",
                 name:"修改商家密码",
                 component: BusinessEditPassword
+            },
+            {
+                path: "AiTalk",
+                name:"Ai对话",
+                component: AiTalk
             }
         ]
     },
@@ -91,6 +97,11 @@ const routes = [
                 path: "editPassword",
                 name:"修改密码",
                 component: CustomerEditPassword
+            },
+            {
+                path: "AiTalk",
+                name:"Ai咨询",
+                component: AiTalk
             }
             // {
             //     path: "itemInfo",

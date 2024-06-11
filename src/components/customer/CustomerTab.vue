@@ -65,7 +65,10 @@ const path=router.currentRoute.value.path
             <span slot="title">修改密码</span>
           </el-menu-item>
         </el-sub-menu>
-
+        <el-menu-item  index="/customer/AiTalk">
+          <el-icon><document /></el-icon>
+          <span>Ai咨询</span>
+        </el-menu-item>
 
       </el-menu>
 
