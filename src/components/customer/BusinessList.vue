@@ -23,7 +23,9 @@ const pagedShopList = computed(() => {
 onMounted(()=>{
   getAllShop();
 })
-
+function getAvatar(avatar) {
+  return avatar ? avatar : "../../assets/img/img.png";
+}
 async function getAllShop() {
   const loading = ElLoading.service({
     lock: true,
@@ -77,10 +79,16 @@ function clean(){
           >
     <div  class="text item">
       <el-card :body-style="{ padding: '0px' }" class="card" @click="gotoBusinessInfo(shop)">
-        <img
-            src="../../assets/img/img.png"
+        <el-image
+            :src="getAvatar(shop.avatar)"
             class="image"
-        />
+        >
+          <template #error>
+            <div>
+              <img src="../../assets/img/img.png" class="image"/>
+            </div>
+          </template>
+        </el-image>
         <div style="padding: 14px">
           <span>{{shop.shopName}}</span>
 <!--          <div class="bottom">-->

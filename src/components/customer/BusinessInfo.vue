@@ -42,7 +42,7 @@ onMounted(()=>{
   console.log(localShopId.value)
   getShopItemList();
 
-  getOrder();
+
 
 
 })
@@ -78,11 +78,16 @@ async function getOrder(){
   loading.close()
 }
 
-async function getShopItemList() {
-  const response = await axios.get("/customer/getItems", {params: {userId: localShopId.value}})
-  console.log(response);
-  shopItemList.value=response.data
-  total.value=response.data.length
+function getShopItemList() {
+   axios.get("/customer/getItems", {params: {userId: localShopId.value}})
+      .then(response=>{
+        console.log(response);
+        shopItemList.value=response.data
+        total.value=response.data.length
+        getOrder()
+      })
+
+
 }
 
 async function handleChange(shopItem) {
@@ -105,6 +110,9 @@ function handleCurrentChange(newPage){
   // console.log(newPage)
   currentPage.value=newPage
 }
+function getAvatar(avatar) {
+  return avatar ? avatar : "../../assets/img/img_1.png";
+}
 </script>
 
 <template>
@@ -119,10 +127,16 @@ function handleCurrentChange(newPage){
       <div  class="text item">
         <el-card :body-style="{ padding: '10px',display:'flex'}" class="card" >
 
-          <img
-              src="../../assets/img/img_1.png"
+          <el-image
+              :src="getAvatar(shopItem.avatar)"
               class="image"
-          />
+          >
+            <template #error>
+              <div>
+                <img src="../../assets/img/img_1.png" class="image"/>
+              </div>
+            </template>
+          </el-image>
           <div style="padding: 14px">
             <div>{{ shopItem.itemName }}</div>
             <div>{{shopItem.description}}</div>

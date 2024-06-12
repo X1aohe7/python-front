@@ -1,6 +1,6 @@
 <script setup>
 import {useRouter} from "vue-router";
-import {computed, onMounted, ref} from "vue";
+import {computed, onMounted, reactive, ref} from "vue";
 import axios from "axios";
 import {Delete, InfoFilled, View} from "@element-plus/icons-vue";
 import qs from "qs";
@@ -11,7 +11,7 @@ const router=useRouter();
 let itemList=ref([]);
 let dialogFormVisible=ref(false);
 let form=ref({});
-
+let formRef=ref()
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(5);
@@ -24,6 +24,25 @@ const pagedItemList = computed(() => {
   let list=itemList.value.slice(startIndex, endIndex);
   // console.log(list)
   return list
+});
+
+const validateNumber = (rule, value, callback) => {
+  if (value === '' || isNaN(value) || Number(value) < 0) {
+    callback(new Error('请输入一个大于或等于0的数字'));
+  } else {
+    callback();
+  }
+};
+
+const rules = reactive({
+  itemName: [{ required: true, message: '请输入门店名称', trigger: 'blur' }],
+  description: [{ required: true, message: '请输入门店地址', trigger: 'blur' }],
+  avatar: [{ required: true, message: '请上传头像', trigger: 'blur' }],
+  price: [
+    { required: true, message: '请输入起送价', trigger: 'blur' },
+    { validator: validateNumber, trigger: 'blur' }
+  ],
+
 });
 
 
@@ -66,18 +85,31 @@ function add(){
   form.value={}
 }
 
-async function save() {
+async function save(fr) {
 
   form.value.userId = user.userId
   console.log(form.value)
-  const response = await axios.post("/business/createItem", qs.stringify(form.value), {
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded'
+
+
+
+  if (!fr) return
+  await fr.validate( async (valid) => {
+    console.log(valid,666)
+    if (valid) {
+      const response = await axios.post("/business/createItem", qs.stringify(form.value), {
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      })
+      console.log(response)
+      dialogFormVisible.value = false
+      getItemList()
+      form.value={}
+      ElMessage.success('保存成功');
+    } else {
+      ElMessage.error('请填写完整的表单信息');
     }
-  })
-  console.log(response)
-  dialogFormVisible.value = false
-  getItemList()
+  });
 }
 
 
@@ -123,6 +155,38 @@ async function deleteItem(id) {
   console.log(response.data); // 这里可以根据需要处理响应
   getItemList()
 }
+const updateAvatar = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    const isImage = file.type.startsWith('image/');
+    const isLt2M = file.size / 1024 / 1024 < 2;
+
+    if (!isImage) {
+      ElMessage.error('上传的文件必须是图片!');
+      return;
+    }
+    if (!isLt2M) {
+      ElMessage.error('上传的图片大小不能超过 2MB!');
+      return;
+    }
+
+    // avatar.value = file;
+    // avatarUrl.value = URL.createObjectURL(file);
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      // avatar.value = reader.result; // Base64 编码
+      // console.log(avatar.value)
+      form.value.avatar = reader.result; // 用于预览
+    };
+    reader.onerror = () => {
+      ElMessage.error('文件读取失败');
+    };
+
+  }
+  event.target.value = '';
+};
+
 </script>
 
 <template>
@@ -134,6 +198,11 @@ async function deleteItem(id) {
   <el-table :data="pagedItemList" border stripe v-loading="loading">
 
     <el-table-column prop="itemId" label="ID" >
+    </el-table-column>
+    <el-table-column label="商品图片">
+      <template #default="scope">
+        <el-image :src="scope.row.avatar" fit="cover" style="width: 100px; height: 100px;"></el-image>
+      </template>
     </el-table-column>
     <el-table-column prop="itemName" label="商品名称" >
     </el-table-column>
@@ -176,14 +245,37 @@ async function deleteItem(id) {
 
 
   <el-dialog title="商品信息" v-model="dialogFormVisible" width="30%">
-    <el-form label-width="70px"  :model="form">
-      <el-form-item label="商品名称" >
+    <el-form label-width="70px"  :model="form" :rules="rules" ref="formRef">
+      <el-form-item label="头像上传" prop="avatar">
+        <el-image
+            :src="form.avatar"
+            class="image_1"
+            style="border-radius: 3px 3px 0 0"
+        >
+          <template #error>
+            <div class="error">
+
+              暂无头像
+
+            </div>
+          </template>
+        </el-image>
+        <el-button style="margin-left: 20px" @click="$refs.upload.click()">上传头像
+          <input
+              ref="upload"
+              style="display: none"
+              name="file"
+              type="file"
+              @change="updateAvatar"
+          /></el-button>
+      </el-form-item>
+      <el-form-item label="商品名称" prop="itemName">
         <el-input v-model="form.itemName" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="描述" >
+      <el-form-item label="描述" prop="description">
         <el-input v-model="form.description" autocomplete="off"></el-input>
       </el-form-item>
-      <el-form-item label="价格" >
+      <el-form-item label="价格" prop="price">
         <el-input v-model="form.price" autocomplete="off"></el-input>
       </el-form-item>
 
@@ -193,7 +285,7 @@ async function deleteItem(id) {
     <template #footer>
       <span class="dialog-footer">
         <el-button @click="dialogFormVisible = false">Cancel</el-button>
-        <el-button type="primary" @click="save">
+        <el-button type="primary" @click="save(formRef)">
           Confirm
         </el-button>
       </span>
@@ -217,5 +309,17 @@ async function deleteItem(id) {
   display: flex;
   justify-content: center;
   margin-top: 50px;
+}
+.image_1 {
+  width: 275px;
+  height: 260px;
+  background: #ffffff;
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+}
+.error {
+  margin: 100px auto;
+  width: 50%;
+  padding: 10px;
+  text-align: center;
 }
 </style>
