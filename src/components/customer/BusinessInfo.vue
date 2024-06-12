@@ -113,6 +113,19 @@ function handleCurrentChange(newPage){
 function getAvatar(avatar) {
   return avatar ? avatar : "../../assets/img/img_1.png";
 }
+
+const goToItemInfo = (shopItem) => {
+  router.push({
+    path: '/customer/ItemInfo',
+    query: {
+      itemName: shopItem.itemName,
+      description: shopItem.description,
+      price: shopItem.price
+    }
+  });
+  console.log('6');
+  console.log(shopItem);
+};
 </script>
 
 <template>
@@ -124,8 +137,8 @@ function getAvatar(avatar) {
   <el-row>
     <el-col v-for="shopItem in pagedShopItemList" :key="shopItem.itemId" :span="8"
     >
-      <div  class="text item">
-        <el-card :body-style="{ padding: '10px',display:'flex'}" class="card" >
+      <div  class="text item" @click="goToItemInfo(shopItem)">
+        <el-card :body-style="{ padding: '10px',display:'flex'}" class="card">
 
           <el-image
               :src="getAvatar(shopItem.avatar)"

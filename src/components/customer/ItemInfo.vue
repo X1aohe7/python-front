@@ -9,9 +9,9 @@
   <div class="area">
     <img src="../../assets/img/img_1.png">
     <div class="item">
-      <h2>商品</h2>
-      <div class="description">商品描述</div>
-      <div class="price">价格</div>
+      <h2>{{ $route.query.itemName }}</h2>
+      <div class="description">{{ $route.query.description }}</div>
+      <div class="price">{{ $route.query.price }}</div>
       <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />
       <div class="button">
         <el-button>购买</el-button>
