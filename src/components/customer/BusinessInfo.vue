@@ -120,7 +120,8 @@ const goToItemInfo = (shopItem) => {
     query: {
       itemName: shopItem.itemName,
       description: shopItem.description,
-      price: shopItem.price
+      price: shopItem.price,
+      avatar: shopItem.avatar
     }
   });
   console.log('6');
