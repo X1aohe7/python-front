@@ -92,10 +92,16 @@ const doLogin = async () => {
       <el-form-item>
         <el-button type="primary" @click="doLogin" style="width: 100%;">登录</el-button>
       </el-form-item>
-<!--      <el-row style="text-align: center;margin-top: -10px;">-->
-<!--        <el-link type="primary" @click="router.push('/register')" style="margin-right: 6px">用户注册</el-link>-->
-<!--      </el-row>-->
+      <div class="register-container">
+        <el-row style="text-align: center;margin-top: -10px;">
+        <el-link type="primary" @click="router.push('/customerRegister')">用户注册</el-link>
+        </el-row>
+        <el-row style="text-align: center;margin-top: -10px;">
+          <el-link type="primary" @click="router.push('/businessRegister')">商铺注册</el-link>
+        </el-row>
+      </div>
     </el-form>
+
   </div>
 
 </template>
@@ -126,5 +132,10 @@ const doLogin = async () => {
   margin: 0px auto 40px auto;
   text-align: center;
   color: #505458;
+}
+.register-container{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
 }
 </style>

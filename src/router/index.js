@@ -15,7 +15,8 @@ import BusinessEditPassword from "../components/business/BusinessEditPassword.vu
 import EditBusinessInfo from "../components/business/EditBusinessInfo.vue";
 import AiTalk from "../components/AiTalk.vue";
 import ItemInfo from "../components/customer/ItemInfo.vue";
-
+import customerRegister from "../views/customerRegister.vue";
+import businessRegister from "../views/businessRegister.vue";
 
 const routes = [
     {
@@ -25,6 +26,14 @@ const routes = [
     {
         path:'/login',
         component:Login
+    },
+    {
+        path:'/customerRegister',
+        component:customerRegister
+    },
+    {
+        path:'/businessRegister',
+        component:businessRegister
     },
     {
         path: "/business",
@@ -143,7 +152,7 @@ router.beforeEach((to, from, next) => {
     //     isLogin ? next() : next('/login')
     // }
     // Allow access to login page and registration page
-    if (to.path === '/login') {
+    if (to.path === '/login' || to.path === '/customerRegister' || to.path === '/businessRegister') {
         next();
     } else {
         // If user is not logged in, redirect to login page

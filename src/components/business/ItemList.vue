@@ -14,7 +14,7 @@ let form=ref({});
 let formRef=ref()
 let currentPage=ref(1);
 let total=ref(0);
-let pageSize=ref(5);
+let pageSize=ref(4);
 let loading=ref(true)
 
 const pagedItemList = computed(() => {
