@@ -138,12 +138,13 @@ const goToItemInfo = (shopItem) => {
   <el-row>
     <el-col v-for="shopItem in pagedShopItemList" :key="shopItem.itemId" :span="8"
     >
-      <div  class="text item" @click="goToItemInfo(shopItem)">
+      <div  class="text item" >
         <el-card :body-style="{ padding: '10px',display:'flex'}" class="card">
 
           <el-image
               :src="getAvatar(shopItem.avatar)"
               class="image"
+              @click="goToItemInfo(shopItem)"
           >
             <template #error>
               <div>

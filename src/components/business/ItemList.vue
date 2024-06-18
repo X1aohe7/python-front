@@ -257,7 +257,7 @@ function getAvatar(avatar) {
 
 
   <el-dialog title="商品信息" v-model="dialogFormVisible" width="30%">
-    <el-form label-width="70px"  :model="form" :rules="rules" ref="formRef">
+    <el-form label-width="80px"  :model="form" :rules="rules" ref="formRef">
       <el-form-item label="头像上传" prop="avatar">
         <el-image
             :src="form.avatar"

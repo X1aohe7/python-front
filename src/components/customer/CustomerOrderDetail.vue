@@ -63,7 +63,7 @@ function getLineItemList() {
   axios.get("/customer/getOrderDetail", {params:{orderId:localOrderId.value}})
   .then((response)=>{
     console.log(response)
-    order.value=response.data.order[0]
+    order.value=response.data.order
     lineItemList.value=response.data.orderDetail
     total.value=response.data.orderDetail.length
     customerStatus.value=order.value.customerStatus
