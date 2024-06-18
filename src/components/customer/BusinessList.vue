@@ -122,6 +122,7 @@ function clean(){
 .card .image{
   width: 100px;
   height: 100px;
+  padding: 5px;
 }
 
 

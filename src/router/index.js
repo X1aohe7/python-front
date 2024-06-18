@@ -144,6 +144,7 @@ router.beforeEach((to, from, next) => {
 
     /***************检测是否有token，若无则返回登录页*****************/
     const user = sessionStorage.getItem("user") ? JSON.parse(sessionStorage.getItem("user")) : null
+    console.log(user)
     const isLogin = !!user
     // //放行登录页和注册页
     // if (to.path === '/login' ) {

@@ -187,6 +187,12 @@ const updateAvatar = (event) => {
   event.target.value = '';
 };
 
+function getAvatar(avatar) {
+  // console.log(avatar ? avatar : "1")
+
+    return avatar ? avatar : '../../src/assets/img/img_1.png';
+}
+
 </script>
 
 <template>
@@ -201,7 +207,13 @@ const updateAvatar = (event) => {
     </el-table-column>
     <el-table-column label="商品图片">
       <template #default="scope">
-        <el-image :src="scope.row.avatar" fit="cover" style="width: 100px; height: 100px;"></el-image>
+        <el-image :src="getAvatar(scope.row.avatar)" fit="cover" style="width: 100px; height: 100px;">
+          <template #error>
+            <div>
+              <img src="../../assets/img/img_1.png" />
+            </div>
+          </template>
+        </el-image>
       </template>
     </el-table-column>
     <el-table-column prop="itemName" label="商品名称" >

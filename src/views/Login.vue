@@ -55,7 +55,7 @@ const doLogin = async () => {
     // 打印收到的数据（用于测试）
     console.log(res.data);
     if(res.data!=null){
-      const user=res.data[0]
+      const user=res.data
       ok();
       sessionStorage.setItem("user",JSON.stringify(user));
       if(user.userType==1){
@@ -70,9 +70,11 @@ const doLogin = async () => {
 
   } catch (err) {
     // 异常
-    if (err.response.status === 401) {
-      error()
-    }
+    console.log(err)
+    // if (err.response.status === 401) {
+    //   error()
+    // }
+    error()
   }
 };
 </script>
