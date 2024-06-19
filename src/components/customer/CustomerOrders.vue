@@ -43,6 +43,8 @@ function mapStatus(status){
     return "已退款"
   }else if(status==3){
     return "已取消"
+  }else if(status==4){
+    return "已评价"
   }
 }
 function businessStatus(status){
@@ -73,7 +75,7 @@ function handleClick(row){
   // console.log(row)
   router.push({
     path:"/customer/orderDetail",
-    query:{orderId:row.orderId,shopName:row.shopName}
+    query:{orderId:row.orderId,shopName:row.shopName,businessId:row.businessId}
   })
 }
 </script>

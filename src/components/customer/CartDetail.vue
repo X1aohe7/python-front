@@ -158,6 +158,8 @@ function handleCurrentChange(newPage){
   color: red;
   font-weight: bold;
   letter-spacing: 0.1em;
+  margin-right: 10px;
+
 }
 .flex-container .button{
   margin-top: 50px;

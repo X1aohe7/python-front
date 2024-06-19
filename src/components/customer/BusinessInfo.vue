@@ -14,8 +14,8 @@ let localShopId=ref(-1);
 const shopItemList=ref([]);
 const lineItemList=ref([]);
 let orderId=ref();
-
-
+let dialogFormVisible=ref(false)
+let commentList=ref()
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
@@ -157,13 +157,26 @@ const goToItemInfo = (shopItem) => {
   console.log('6');
   console.log(shopItem);
 };
+function getComment(){
+  axios.get("/customer/getCommentsByBusinessId", {
+    params:{
+      businessId:localShopId.value
+    }
+  }).then(response=>{
+    console.log(response)
+    commentList.value=response.data.comments
+    dialogFormVisible.value=true
+
+  })
+}
 </script>
 
 <template>
-  <div style="display:flex; background-color: #c0c0c0">
+  <div style="display: flex; background-color: #c0c0c0; justify-content: space-between; align-items: center; padding: 10px;">
     <el-card class="box-card">
       <div>{{localShopName}}</div>
     </el-card>
+    <el-button style="margin-left: auto;" @click="getComment()">查看评价</el-button>
   </div>
   <el-row>
     <el-col v-for="shopItem in pagedShopItemList" :key="shopItem.itemId" :span="8"
@@ -209,7 +222,20 @@ const goToItemInfo = (shopItem) => {
     />
 <!--    <el-button type="success" style="float: right; ">支付</el-button>-->
   </div>
-
+  <el-dialog title="所有评价" v-model="dialogFormVisible" width="60%">
+    <el-table :data="commentList"  style="width: 100%" border stripe>
+      <el-table-column prop="customerId" label="顾客Id" width="180" />
+      <el-table-column prop="star" label="星级评价" width="180" >
+        <template #default="scope">
+          <div class="demo-rate-block">
+            <el-rate v-model="scope.row.star" />
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column prop="description" label="文字评价" />
+      <el-table-column prop="timestamp" label="评价时间" />
+    </el-table>
+  </el-dialog>
 </template>
 
 <style scoped>

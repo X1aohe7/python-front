@@ -57,7 +57,7 @@ function handleCurrentChange(newPage){
     </el-table-column>
     <el-table-column prop="businessName" label="商家名称" >
     </el-table-column>
-    <el-table-column prop="cartItems.length" label="总数" >
+    <el-table-column prop="totalPrice" label="总价" >
     </el-table-column>
 <!--    <el-table-column prop="customerStatus" label="订单状态">-->
 <!--      <template v-slot="scope">-->
