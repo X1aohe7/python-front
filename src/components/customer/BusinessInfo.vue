@@ -47,6 +47,33 @@ onMounted(()=>{
 
 })
 
+function getCart(){
+  axios.get("/customer/getCartListByBusinessId", {
+    params: {
+      customerId: user.userId,
+      businessId: localShopId.value
+    }
+  })
+      .then(response => {
+        console.log(response);
+        let cartItems = response.data.cartItems;
+
+        // 遍历商品列表，将购物车中的数量匹配到商品列表中
+        shopItemList.value.forEach(item => {
+          let cartItem = cartItems.find(cartItem => cartItem.itemId === item.itemId);
+          item.quantity = cartItem ? cartItem.quantity : 0;  // 如果购物车中有该商品，则匹配数量；否则数量为0
+        });
+
+        // 如果需要在 UI 中显示更新后的商品列表，可以在此处更新视图
+      })
+      .catch(error => {
+        console.error('Error fetching cart:', error);
+      })
+      .finally(()=>{
+        loading.close()
+      });
+}
+
 async function getOrder(){
   const requestData={
     customerId:user.userId,
@@ -84,7 +111,8 @@ function getShopItemList() {
         console.log(response);
         shopItemList.value=response.data
         total.value=response.data.length
-        getOrder()
+        // getOrder()
+        getCart()
       })
 
 
@@ -92,7 +120,9 @@ function getShopItemList() {
 
 async function handleChange(shopItem) {
   const requestData={
-    orderId:orderId.value,
+    // orderId:orderId.value,
+    customerId:user.userId,
+    businessId:localShopId.value,
     itemId:shopItem.itemId,
     quantity:shopItem.quantity,
     price:shopItem.price

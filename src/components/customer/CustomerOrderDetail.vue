@@ -52,7 +52,7 @@ onMounted(()=>{
   localShopName.value=router.currentRoute.value.query.shopName
   // console.log(localOrderId.value)
   getLineItemList()
-  loading.close()
+  // loading.close()
 })
 
 function getLineItemList() {
@@ -155,10 +155,10 @@ async function pay() {
     <div class="price">
       总价:{{order.totalPrice}}&#165;
     </div>
-    <div class="button" v-if="customerStatus==0">
-      <el-button type="danger" @click="cancel">取消订单</el-button>
-      <el-button type="primary" @click="pay">支付</el-button>
-    </div>
+<!--    <div class="button" v-if="customerStatus==0">-->
+<!--      <el-button type="danger" @click="cancel">取消订单</el-button>-->
+<!--      <el-button type="primary" @click="pay">支付</el-button>-->
+<!--    </div>-->
   </div>
 </template>
 

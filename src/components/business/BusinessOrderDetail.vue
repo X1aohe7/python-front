@@ -13,7 +13,7 @@ const localOrderId=ref()
 const localShopName=ref("")
 const order=ref({})
 const businessStatus=ref()
-
+let loading=ref(true)
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
@@ -60,6 +60,7 @@ async function getLineItemList() {
   lineItemList.value=response.data.orderDetail
   total.value=response.data.orderDetail.length
   businessStatus.value=order.value.businessStatus
+  loading.value=false
 }
 
 
@@ -113,7 +114,7 @@ async function confirm() {
 
 <template>
 <!--  <el-card>{{localShopName}}</el-card>-->
-  <el-table :data="pagedLineItemList" border stripe >
+  <el-table :data="pagedLineItemList" border stripe v-loading="loading" >
 
     <el-table-column prop="itemId" label="商品id" width="80">
     </el-table-column>

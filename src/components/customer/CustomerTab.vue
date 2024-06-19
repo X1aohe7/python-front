@@ -3,6 +3,7 @@ import {
   Document,
   Menu as IconMenu,
   Avatar,
+  ShoppingCart,
   Location,
   Setting,
 } from '@element-plus/icons-vue'
@@ -42,6 +43,11 @@ const path=router.currentRoute.value.path
             <el-icon><icon-menu /></el-icon>
             <span>店铺列表</span>
           </template>
+        </el-menu-item>
+
+        <el-menu-item  index="/customer/cart">
+          <el-icon><ShoppingCart /></el-icon>
+          <span>购物车</span>
         </el-menu-item>
 
         <el-menu-item  index="/customer/customerOrders">

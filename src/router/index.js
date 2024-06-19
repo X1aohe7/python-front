@@ -17,6 +17,8 @@ import AiTalk from "../components/AiTalk.vue";
 import ItemInfo from "../components/customer/ItemInfo.vue";
 import customerRegister from "../views/customerRegister.vue";
 import businessRegister from "../views/businessRegister.vue";
+import Cart from "../components/customer/Cart.vue";
+import CartDetail from "../components/customer/CartDetail.vue";
 
 const routes = [
     {
@@ -83,6 +85,16 @@ const routes = [
                 path: "businessList",
                 name: "店铺列表",
                 component: BusinessList
+            },
+            {
+                path: "cart",
+                name: "购物车",
+                component: Cart
+            },
+            {
+                path: "cartDetail",
+                name: "购物车明细",
+                component: CartDetail
             },
             {
                 path: "customerOrders",

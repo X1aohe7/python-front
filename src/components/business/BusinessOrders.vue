@@ -10,6 +10,7 @@ const orderList=ref([]);
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
+let loading=ref(true)
 
 const pagedOrderList = computed(() => {
   // console.log(shopList.value)
@@ -31,6 +32,7 @@ async function getAllOrder() {
   console.log(response)
   orderList.value=response.data
   total.value=response.data.length
+  loading.value=false
 }
 function mapStatus(status){
   if(status==0){
@@ -59,7 +61,7 @@ function handleClick(row){
 
 <template>
 
-  <el-table :data="pagedOrderList" border stripe >
+  <el-table :data="pagedOrderList" border stripe v-loading="loading" >
 
     <el-table-column prop="orderId" label="订单号" width="80">
     </el-table-column>
