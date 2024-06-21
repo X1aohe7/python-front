@@ -147,13 +147,16 @@ async function deleteItem(id) {
     userId: userId,
     itemId: itemId,
   }
-  const response = await axios.post('/business/deleteItem', formData, {
+  loading.value=true
+  axios.post('/business/deleteItem', formData, {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded'
     }
-  });
-  console.log(response.data); // 这里可以根据需要处理响应
-  getItemList()
+  }).then(res=>{
+    console.log(res.data); // 这里可以根据需要处理响应
+    getItemList()
+  })
+
 }
 const updateAvatar = (event) => {
   const file = event.target.files[0];

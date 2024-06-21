@@ -17,11 +17,16 @@ const shopItemList=ref([]);
 const lineItemList=ref([]);
 let orderId=ref();
 let dialogFormVisible=ref(false)
-let commentList=ref()
+let commentList=ref([])
 let currentPage=ref(1);
+let commentPage=ref(1);
 let total=ref(0);
+let commentTotal=ref(0);
 let pageSize=ref(9)
+
 const isCollected=ref(false)
+let commentSize=ref(5)
+
 
 const pagedShopItemList = computed(() => {
   // console.log(shopList.value)
@@ -31,6 +36,17 @@ const pagedShopItemList = computed(() => {
   // console.log(list)
   return list
 });
+
+
+const pagedCommentList = computed(() => {
+  // console.log(shopList.value)
+  const startIndex = (commentPage.value - 1) * commentSize.value;
+  const endIndex = startIndex + commentSize.value;
+  let list=commentList.value.slice(startIndex, endIndex);
+  // console.log(list)
+  return list
+});
+
 const loading = ElLoading.service({
   lock: true,
   text: 'Loading',
@@ -140,6 +156,11 @@ function handleCurrentChange(newPage){
   // console.log(newPage)
   currentPage.value=newPage
 }
+
+function handleCommentChange(newPage){
+  // console.log(newPage)
+  commentPage.value=newPage
+}
 function getAvatar(avatar) {
   return avatar ? avatar : "../../assets/img/img_1.png";
 }
@@ -165,6 +186,7 @@ function getComment(){
   }).then(response=>{
     console.log(response)
     commentList.value=response.data.comments
+    commentTotal.value=response.data.comments.length
     dialogFormVisible.value=true
 
   })
@@ -257,7 +279,7 @@ const toggleCollect = async (shopItem) => {
 <!--    <el-button type="success" style="float: right; ">支付</el-button>-->
   </div>
   <el-dialog title="所有评价" v-model="dialogFormVisible" width="60%">
-    <el-table :data="commentList"  style="width: 100%" border stripe>
+    <el-table :data="pagedCommentList"  style="width: 100%" border stripe>
       <el-table-column prop="customerId" label="顾客Id" width="180" />
       <el-table-column prop="star" label="星级评价" width="180" >
         <template #default="scope">
@@ -269,6 +291,17 @@ const toggleCollect = async (shopItem) => {
       <el-table-column prop="description" label="文字评价" />
       <el-table-column prop="timestamp" label="评价时间" />
     </el-table>
+    <div class="example-pagination-block">
+
+      <el-pagination
+          v-model:current-page="commentPage"
+          :page-size="commentSize"
+          layout="total, prev, pager, next"
+          :total="commentTotal"
+
+          @current-change="handleCommentChange"
+      />
+    </div>
   </el-dialog>
 </template>
 
