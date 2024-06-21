@@ -3,17 +3,20 @@
 import {onMounted, ref} from 'vue';
 import { ElMessage } from 'element-plus';
 import axios from "axios";
+import {useRouter} from "vue-router";
 
 const customerName = ref('');
 // let showbutton=true
 const avatarUrl = ref('');
 const avatar = ref(null);
 const user=ref()
+const router=useRouter()
 onMounted(()=>{
   user.value=JSON.parse(sessionStorage.getItem('user'))
   console.log(user.value)
   customerName.value=user.value.customerName
   avatarUrl.value=user.value.avatar
+  avatar.value=user.value.avatar
 })
 
 const updateAvatar = (event) => {
@@ -73,8 +76,18 @@ const submitForm = () => {
   }).then(res => {
     console.log(res);
     user.value.avatar = avatar.value;
+    user.value.customerName=customerName.value
     sessionStorage.setItem('user', JSON.stringify(user.value));
-    ElMessage.success('个人信息已更新！');
+    return new Promise((resolve) => {
+      ElMessage.success({
+        message: '个人信息已更新！',
+        onClose: () => {
+          resolve();
+        }
+      });
+    });
+  }).then(() => {
+    router.go(0);
   }).catch(error => {
     console.error(error);
     ElMessage.error('更新失败');

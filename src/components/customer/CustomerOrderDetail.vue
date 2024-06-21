@@ -15,11 +15,7 @@ const businessId=ref()
 const localShopName=ref("")
 const order=ref({})
 const customerStatus=ref()
-const loading = ElLoading.service({
-  lock: true,
-  text: 'Loading',
-  background: 'rgba(0, 0, 0, 0.7)',
-})
+
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
@@ -70,6 +66,11 @@ onMounted(()=>{
 })
 
 function getLineItemList() {
+  const loading = ElLoading.service({
+    lock: true,
+    text: 'Loading',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
   const requestData={
     orderId:localOrderId.value
   }
