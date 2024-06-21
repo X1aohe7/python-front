@@ -19,6 +19,7 @@ import customerRegister from "../views/customerRegister.vue";
 import businessRegister from "../views/businessRegister.vue";
 import Cart from "../components/customer/Cart.vue";
 import CartDetail from "../components/customer/CartDetail.vue";
+import myCollect from "../components/customer/myCollect.vue";
 
 const routes = [
     {
@@ -130,6 +131,11 @@ const routes = [
                 path: 'ItemInfo',
                 name: '商品信息',
                 component: ItemInfo
+            },
+            {
+                path: "myCollect",
+                name:'我的收藏',
+                component: myCollect
             }
             // {
             //     path: "ItemInfo",

@@ -55,6 +55,11 @@ const path=router.currentRoute.value.path
           <span>订单</span>
         </el-menu-item>
 
+        <el-menu-item  index="/customer/myCollect">
+          <el-icon><Star /></el-icon>
+          <span>我的收藏</span>
+        </el-menu-item>
+
         <el-sub-menu index="1">
           <template #title>
             <el-icon><Avatar /></el-icon>

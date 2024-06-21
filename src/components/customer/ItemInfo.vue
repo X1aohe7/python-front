@@ -31,10 +31,10 @@ function getAvatar(avatar) {
           <h2>{{ $route.query.itemName }}</h2>
           <div class="description">{{ $route.query.description }}</div>
           <div class="price">&#165;{{ $route.query.price }}</div>
-          <!--      <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />-->
-          <!--      <div class="button">-->
-          <!--        <el-button>购买</el-button>-->
-          <!--      </div>-->
+<!--                <el-input-number v-model="num" :min="1" :max="10" @change="handleChange" />-->
+<!--                <div class="button">-->
+<!--                  <el-button>购买</el-button>-->
+<!--                </div>-->
         </div>
       </div>
     </div>

@@ -4,6 +4,8 @@ import {computed, onMounted, ref} from "vue";
 import axios from "axios";
 import qs from "qs";
 import {ElLoading} from "element-plus";
+import {Star} from '@element-plus/icons-vue'
+
 
 let user;
 const router=useRouter()
@@ -19,6 +21,7 @@ let commentList=ref()
 let currentPage=ref(1);
 let total=ref(0);
 let pageSize=ref(9)
+const isCollected=ref(false)
 
 const pagedShopItemList = computed(() => {
   // console.log(shopList.value)
@@ -41,9 +44,6 @@ onMounted(()=>{
   localShopName.value=router.currentRoute.value.query.shopName
   console.log(localShopId.value)
   getShopItemList();
-
-
-
 
 })
 
@@ -169,6 +169,24 @@ function getComment(){
 
   })
 }
+
+
+const toggleCollect = async (shopItem) => {
+  const user = JSON.parse(sessionStorage.getItem("user"));
+  const userId = user.userId;
+  // console.log(userId)
+  try {
+    console.log('1'); // 输出信息到控制台
+    const request = await axios.post("/customer/collect", {
+      itemId: shopItem.itemId,
+      userId: userId
+    });
+    isCollected.value = request.data.isCollected;
+    console.log(isCollected.value)
+  } catch (error) {
+    console.error(error); // 输出捕获到的错误对象到控制台
+  }
+}
 </script>
 
 <template>
@@ -196,15 +214,31 @@ function getComment(){
             </template>
           </el-image>
           <div style="padding: 14px">
-            <div>{{ shopItem.itemName }}</div>
+            <div style="font-size: 20px; font-weight: bolder">{{ shopItem.itemName }}</div>
             <div>{{shopItem.description}}</div>
             <div>&#165;{{shopItem.price}}</div>
-            <el-input-number v-model="shopItem.quantity" :min="0" :max="9" @change="handleChange(shopItem)" />
-<!--            <div class="bottom">-->
+            <div class="collect">
+              <div>
+                <el-input-number v-model="shopItem.quantity" :min="0" :max="9" @change="handleChange(shopItem)" />
+              </div>
+              <div class="star">
+                <el-button type="warning" :icon="Star" circle @click="toggleCollect(shopItem)"></el-button>
+              </div>
 
-<!--              <el-button text class="button">Operating</el-button>-->
-<!--            </div>-->
+  <!--            <div class="bottom">-->
+
+  <!--              <el-button text class="button">Operating</el-button>-->
+  <!--            </div>-->
+<!--              <el-icon-->
+<!--                  :style="{ color: isCollected ? 'yellow' : 'gray' }"-->
+<!--                  @click="toggleCollect(shopItem)"-->
+<!--              >-->
+<!--                <Star />-->
+<!--              </el-icon>-->
+
+            </div>
           </div>
+
         </el-card>
 
       </div>
@@ -275,11 +309,18 @@ function getComment(){
   margin-right: 5px;
 }
 
-
-
 .example-pagination-block{
   display: flex;
   justify-content: center;
   margin-top: 20px;
+}
+
+.collect{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.star{
+  margin-left: 120px;
 }
 </style>
